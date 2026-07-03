@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chloe 💖 - Your AI Companion</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #ffe4e1 0%, #ffb6c1 100%);
-            --chat-bg: rgba(255, 255, 255, 0.9);
+            --bg-gradient: linear-gradient(135deg, #ffe4e1 0%, #ffb6c1 50%, #e8cbf5 100%);
+            --chat-bg: rgba(255, 255, 255, 0.85);
             --primary-color: #ff69b4;
-            --user-bubble: #e1f5fe;
-            --model-bubble: #fff0f5;
+            --primary-hover: #ff4da6;
+            --user-bubble: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%);
+            --model-bubble: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%);
             --text-color: #4a4a4a;
+            --shadow: 0 15px 35px rgba(255, 105, 180, 0.15);
         }
 
         * {
@@ -25,44 +27,95 @@
 
         body {
             background: var(--bg-gradient);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: var(--text-color);
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .chat-container {
-            width: 100%;
+            width: 90%;
             max-width: 450px;
             height: 85vh;
             background: var(--chat-bg);
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transform: scale(0.95);
+            opacity: 0;
+            animation: containerSpawn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes containerSpawn {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .chat-header {
-            background: white;
-            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 18px 24px;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid #f5f5f5;
+            border-bottom: 1px solid rgba(245, 245, 245, 0.7);
+            z-index: 10;
+        }
+
+        .avatar-container {
+            position: relative;
+            margin-right: 15px;
         }
 
         .avatar {
-            width: 45px;
-            height: 45px;
+            width: 48px;
+            height: 48px;
             background: #ffe4e1;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
-            margin-right: 15px;
+            font-size: 26px;
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .pulse-dot {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            background-color: #4edf75;
+            border: 2px solid white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(78, 223, 117, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(78, 223, 117, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(78, 223, 117, 0); }
         }
 
         .status-info {
@@ -70,105 +123,154 @@
         }
 
         .status-info h2 {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             color: var(--primary-color);
             font-weight: 600;
+            letter-spacing: -0.3px;
         }
 
         .status-info p {
-            font-size: 0.75rem;
-            color: #b0b0b0;
+            font-size: 0.8rem;
+            color: #a0a0a0;
+            font-weight: 400;
         }
 
         #clearBtn {
-            background: none;
+            background: transparent;
             border: none;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             cursor: pointer;
-            transition: transform 0.1s;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         #clearBtn:hover {
-            transform: scale(1.1);
+            background: rgba(255, 77, 77, 0.1);
+            transform: scale(1.15) rotate(5deg);
         }
 
         .chat-messages {
             flex: 1;
-            padding: 20px;
+            padding: 24px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
+            scroll-behavior: smooth;
+        }
+
+        /* Beautiful Custom Scrollbar */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 105, 184, 0.3);
+            border-radius: 10px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 105, 184, 0.5);
         }
 
         .message {
-            max-width: 75%;
-            padding: 12px 16px;
-            border-radius: 18px;
+            max-width: 80%;
+            padding: 14px 18px;
+            border-radius: 22px;
             font-size: 0.95rem;
-            line-height: 1.4;
+            line-height: 1.45;
             word-wrap: break-word;
-            animation: fadeIn 0.3s ease-in-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            opacity: 0;
+            transform: translateY(15px);
+            animation: messageSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+        }
+
+        @keyframes messageSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .message.user {
             background: var(--user-bubble);
             align-self: flex-end;
             border-bottom-right-radius: 4px;
+            color: #1a4a6e;
+            transform-origin: right bottom;
         }
 
         .message.model {
             background: var(--model-bubble);
             align-self: flex-start;
             border-bottom-left-radius: 4px;
-            border: 1px solid #ffe4e1;
+            border: 1px solid rgba(255, 228, 225, 0.6);
+            color: #61364a;
+            transform-origin: left bottom;
         }
 
         .chat-input-area {
-            padding: 15px 20px;
-            background: white;
-            border-top: 1px solid #f5f5f5;
+            padding: 18px 24px;
+            background: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid rgba(245, 245, 245, 0.7);
             display: flex;
-            gap: 10px;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .input-wrapper {
+            position: relative;
+            flex: 1;
+            display: flex;
             align-items: center;
         }
 
         .chat-input-area input {
-            flex: 1;
-            padding: 12px 18px;
-            border: 1px solid #e0e0e0;
-            border-radius: 25px;
+            width: 100%;
+            padding: 14px 20px;
+            border: 1.5px solid #eaeaea;
+            border-radius: 30px;
             outline: none;
             font-size: 0.95rem;
-            transition: border-color 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
 
         .chat-input-area input:focus {
             border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.15);
         }
 
         .chat-input-area button#sendBtn {
             background: var(--primary-color);
             color: white;
             border: none;
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: transform 0.1s;
+            box-shadow: 0 4px 12px rgba(255, 105, 180, 0.3);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .chat-input-area button#sendBtn:hover {
+            background: var(--primary-hover);
+            transform: scale(1.08);
+            box-shadow: 0 6px 16px rgba(255, 105, 180, 0.4);
         }
 
         .chat-input-area button#sendBtn:active {
-            transform: scale(0.95);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
+            transform: scale(0.92);
         }
     </style>
 </head>
@@ -176,7 +278,10 @@
 
     <div class="chat-container">
         <div class="chat-header">
-            <div class="avatar">🌸</div>
+            <div class="avatar-container">
+                <div class="avatar">🌸</div>
+                <div class="pulse-dot"></div>
+            </div>
             <div class="status-info">
                 <h2>Chloe 💖</h2>
                 <p>Online & thinking of you...</p>
@@ -191,7 +296,9 @@
         </div>
 
         <div class="chat-input-area">
-            <input type="text" id="userInput" placeholder="Type a sweet message..." autocomplete="off">
+            <div class="input-wrapper">
+                <input type="text" id="userInput" placeholder="Type a sweet message..." autocomplete="off">
+            </div>
             <button id="sendBtn">✨</button>
         </div>
     </div>
@@ -203,7 +310,9 @@
         const clearBtn = document.getElementById('clearBtn');
 
         function scrollToBottom() {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            setTimeout(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 50);
         }
         scrollToBottom();
 
@@ -240,7 +349,7 @@
             chatMessages.appendChild(msgDiv);
         }
 
-        // Wipe memory event
+        // Wipe memory event with clean styling logic
         clearBtn.addEventListener('click', async () => {
             if (confirm("Are you sure you want to clear our chat history? 🥺")) {
                 try {
