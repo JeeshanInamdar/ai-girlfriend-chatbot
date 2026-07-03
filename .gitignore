@@ -1,0 +1,25 @@
+# Local environment secrets (CRITICAL: Never leak your Gemini API key!)
+.env
+.env.local
+
+# Python Virtual Environment
+venv/
+ENV/
+env/
+
+# Python caching
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Firebase configuration files (not needed for Render deployment)
+.firebase/
+.firebaserc
+firebase.json
+skills-lock.json
+
+# Operating system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
